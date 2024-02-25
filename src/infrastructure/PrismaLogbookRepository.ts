@@ -18,4 +18,16 @@ export class PrismaLogbookRepository implements ILogbookRepository {
 
         return true
     }
+
+    public async find(id: string): Promise<Logbook | null> {
+        const result = await this._client.logbook.findUnique({
+            where: {
+                id
+            }
+        })
+
+        if (!result) return result;
+
+        return new Logbook(result.name, result.userId, result.id)
+    }
 }

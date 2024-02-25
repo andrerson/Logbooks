@@ -4,6 +4,8 @@ import { InMemoryLogbookRepository } from "./infrastructure/InMemoryLogbookRepos
 import { ApiServer } from "./presentation/ApiServer"
 import { CreateLogbookController } from "./presentation/CreateLogbookController"
 import { PrismaLogbookRepository } from "./infrastructure/PrismaLogbookRepository"
+import { GetLogbookController } from "./presentation/GetLogbookController"
+import { GetLogbookUseCase } from "./application/GetLogbookUseCase"
 
 
 export async function main(): Promise<void> {
@@ -13,7 +15,10 @@ export async function main(): Promise<void> {
     const useCase = new CreateLogbookUseCase(prismaRepo)
     const controller = new CreateLogbookController(useCase)
 
-    await ApiServer.run(5000, controller)
+    const getUseCase = new GetLogbookUseCase(prismaRepo)
+    const getController = new GetLogbookController(getUseCase)
+
+    await ApiServer.run(5000, controller, getController)
 }
 
 main()
